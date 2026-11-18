@@ -54,7 +54,15 @@ export function BuilderPreviewPane({ result, isRunning }: Props) {
     setTimeout(() => setCopiedUrl(false), 1800);
   };
 
-  const liveUrl = result.agent37PublicUrl || result.localPreviewUrl;
+  const openStandalonePreview = () => {
+    if (result.agent37PublicUrl) {
+      window.open(result.agent37PublicUrl, "_blank", "noopener,noreferrer");
+      return;
+    }
+    const blob = new Blob([result.html], { type: "text/html;charset=utf-8" });
+    const blobUrl = URL.createObjectURL(blob);
+    window.open(blobUrl, "_blank", "noopener,noreferrer");
+  };
 
   return (
     <div className="space-y-3">
@@ -105,15 +113,14 @@ export function BuilderPreviewPane({ result, isRunning }: Props) {
             <Download className="h-3.5 w-3.5" />
             HTML
           </button>
-          <a
-            href={liveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            type="button"
+            onClick={openStandalonePreview}
             className="inline-flex items-center gap-1 rounded-lg bg-amber-500 px-2.5 py-1 text-xs font-semibold text-zinc-950 hover:bg-amber-400"
           >
             Open Live App
             <ExternalLink className="h-3.5 w-3.5" />
-          </a>
+          </button>
         </div>
       </div>
 
